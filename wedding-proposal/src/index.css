@@ -1,0 +1,70 @@
+/* Import Bootstrap utilities */
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+/* Police plus élégante */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%);
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+}
+
+/* Animation du dégradé pour un effet vivant */
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+body {
+  background-size: 300% 300%;
+  animation: gradientMove 15s ease infinite;
+}
+
+/* Titres élégants */
+h1, h2, h3 {
+  font-family: 'Great Vibes', cursive, 'Poppins', sans-serif;
+  letter-spacing: 1px;
+}
+
+/* Boutons personnalisés */
+.btn-romantic {
+  background: linear-gradient(90deg, #ff758c, #ff7eb3);
+  border: none;
+  color: white;
+  font-weight: bold;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.btn-romantic:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 6px 20px rgba(255, 118, 158, 0.4);
+}
+
+/* Cartes translucides */
+.card-romantic {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: none;
+  box-shadow: 0px 6px 20px rgba(0,0,0,0.15);
+}
+
+/* Texte avec glow romantique */
+.text-glow {
+  color: #ff3366;
+  text-shadow: 0 0 10px rgba(255, 51, 102, 0.6),
+               0 0 20px rgba(255, 51, 102, 0.4);
+}
+
+/* Responsive fix */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem !important;
+  }
+  .btn-romantic {
+    padding: 0.5rem 1rem;
+  }
+}
