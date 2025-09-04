@@ -10,41 +10,53 @@ export default function App() {
   const [countdown, setCountdown] = useState(5);
   const [showQuestion, setShowQuestion] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [confettiTrigger, setConfettiTrigger] = useState(0); // 🔥 nouveau
+  const [confettiTrigger, setConfettiTrigger] = useState(0);
+  const [heartCount, setHeartCount] = useState(20);
   const audioRef = useRef(null);
 
-  // Lecture musique
+  // Lecture musique après le "Oui"
   useEffect(() => {
     if (accepted && audioRef.current) {
       audioRef.current
         .play()
         .then(() => setIsPlaying(true))
-        .catch(() => console.warn("Lecture auto bloquée par le navigateur"));
+        .catch(() =>
+          console.warn("Lecture auto bloquée par le navigateur")
+        );
     }
   }, [accepted]);
 
-  // Compte à rebours
+  // Compte à rebours avant la question
   useEffect(() => {
     if (countdown > 0 && !accepted) {
-      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+      const timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
       return () => clearTimeout(timer);
     } else if (countdown === 0) {
       setShowQuestion(true);
     }
   }, [countdown, accepted]);
 
-  // Relance confettis toutes les 10 secondes après le OUI
+  // Relance confettis toutes les 10s après le "Oui"
   useEffect(() => {
     if (accepted) {
       const interval = setInterval(() => {
         setConfettiTrigger((prev) => prev + 1);
-      }, 10000); // 10s
-
+      }, 10000);
       return () => clearInterval(interval);
     }
   }, [accepted]);
 
-  // Bouton Play / Pause
+  // Déterminer le nombre de cœurs en fonction de la largeur d’écran
+  useEffect(() => {
+    const updateHearts = () => {
+      setHeartCount(window.innerWidth < 768 ? 12 : 20);
+    };
+    updateHearts();
+    window.addEventListener("resize", updateHearts);
+    return () => window.removeEventListener("resize", updateHearts);
+  }, []);
+
+  // Play / Pause musique
   const toggleMusic = () => {
     if (!audioRef.current) return;
     if (isPlaying) {
@@ -57,8 +69,8 @@ export default function App() {
   };
 
   // Génération des cœurs flottants
-  const renderHearts = (count = 20) =>
-    [...Array(count)].map((_, i) => (
+  const renderHearts = () =>
+    [...Array(heartCount)].map((_, i) => (
       <motion.div
         key={i}
         initial={{ y: "110vh", x: Math.random() * window.innerWidth }}
@@ -73,7 +85,9 @@ export default function App() {
         }}
         className="position-absolute opacity-50"
         style={{
-          color: ["#ff3366", "#ff6699", "#ff99cc"][Math.floor(Math.random() * 3)],
+          color: ["#ff3366", "#ff6699", "#ff99cc"][
+            Math.floor(Math.random() * 3)
+          ],
         }}
       >
         <FaHeart size={20 + Math.random() * 30} />
@@ -86,9 +100,9 @@ export default function App() {
       <audio ref={audioRef} src={song} loop />
 
       {/* Cœurs flottants */}
-      {renderHearts(window.innerWidth < 768 ? 12 : 20)}
+      {renderHearts()}
 
-      {/* Confettis → relancés via confettiTrigger */}
+      {/* Confettis */}
       {accepted && <ConfettiExplosion key={confettiTrigger} />}
 
       {/* Contenu */}
@@ -130,22 +144,29 @@ export default function App() {
           <div className="card-body p-4 p-md-5">
             <motion.h1
               initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 1.2, repeat: Infinity, repeatType: "reverse" }}
+              animate={{ scale: 1.05 }}
+              transition={{
+                duration: 1.2,
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
               className="display-4 fw-bold text-glow mb-3"
             >
               Ouiiii ! 💕
             </motion.h1>
             <p className="lead text-dark">
-              Merci mon amour… tu viens de faire de moi la personne la plus heureuse au monde. 🥹✨
-              </br>Je t'aime au-delà de mille millions pour cent. ❤️
-              </br>Pyouttt !!! 😘😘😘😘😘😘😘😘
+              Merci mon amour… tu viens de faire de moi la personne la plus
+              heureuse au monde. 🥹✨
+              <br />Je t&apos;aime au-delà de mille millions pour cent. ❤️
+              <br />Pyouttt !!! 😘😘😘😘😘😘😘😘
             </p>
 
             {/* Bouton Play / Pause */}
             <button
               onClick={toggleMusic}
-              aria-label={isPlaying ? "Mettre en pause la musique" : "Jouer la musique"}
+              aria-label={
+                isPlaying ? "Mettre en pause la musique" : "Jouer la musique"
+              }
               className="btn btn-romantic mt-4"
             >
               {isPlaying ? (
