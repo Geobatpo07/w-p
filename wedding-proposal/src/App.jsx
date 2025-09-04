@@ -138,8 +138,8 @@ export default function App() {
             </motion.h1>
             <p className="lead text-dark">
               Merci mon amour… tu viens de faire de moi la personne la plus heureuse au monde. 🥹✨
-              Je t'aime au-delà de mille millions pour cent. ❤️
-              Pyouttt !!! 😘😘😘😘😘😘😘😘
+              </br>Je t'aime au-delà de mille millions pour cent. ❤️
+              </br>Pyouttt !!! 😘😘😘😘😘😘😘😘
             </p>
 
             {/* Bouton Play / Pause */}
