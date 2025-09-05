@@ -12,7 +12,7 @@ export default function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [confettiTrigger, setConfettiTrigger] = useState(0);
   const [heartCount, setHeartCount] = useState(20);
-  const [sessionExpired, setSessionExpired] = useState(false); // 🔥 nouveau
+  const [sessionExpired, setSessionExpired] = useState(false);
   const audioRef = useRef(null);
 
   // Lecture musique après le "Oui"
