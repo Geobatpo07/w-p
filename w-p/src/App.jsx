@@ -223,7 +223,7 @@ export default function App() {
 
             {/* Bouton Répondre par mail */}
             <a
-              href="mailto:ton.email@example.com?subject=Ma réponse à ta demande 💍&body=Mon amour, voici ma réponse..."
+              href="mailto:lgeobatpo98@gmail.com?subject=Ma réponse à ta demande 💍&body=Mon amour, voici ma réponse..."
               className="btn btn-romantic mt-4"
               role="button"
               aria-label="Répondre par mail"
