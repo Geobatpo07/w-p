@@ -12,6 +12,7 @@ export default function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [confettiTrigger, setConfettiTrigger] = useState(0);
   const [heartCount, setHeartCount] = useState(20);
+  const [sessionExpired, setSessionExpired] = useState(false); // 🔥 nouveau
   const audioRef = useRef(null);
 
   // Lecture musique après le "Oui"
@@ -20,13 +21,11 @@ export default function App() {
       audioRef.current
         .play()
         .then(() => setIsPlaying(true))
-        .catch(() =>
-          console.warn("Lecture auto bloquée par le navigateur")
-        );
+        .catch(() => console.warn("Lecture auto bloquée par le navigateur"));
     }
   }, [accepted]);
 
-  // Compte à rebours avant la question
+  // Compte à rebours
   useEffect(() => {
     if (countdown > 0 && !accepted) {
       const timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
@@ -46,7 +45,7 @@ export default function App() {
     }
   }, [accepted]);
 
-  // Déterminer le nombre de cœurs en fonction de la largeur d’écran
+  // Ajuster le nombre de cœurs
   useEffect(() => {
     const updateHearts = () => {
       setHeartCount(window.innerWidth < 768 ? 12 : 20);
@@ -93,6 +92,48 @@ export default function App() {
         <FaHeart size={20 + Math.random() * 30} />
       </motion.div>
     ));
+
+  // 🔥 Gestion de session (expire après 5 minutes d’inactivité)
+  useEffect(() => {
+    let timeout;
+
+    const resetTimer = () => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        setSessionExpired(true);
+      }, 5 * 60 * 1000); // 5 minutes
+    };
+
+    window.addEventListener("mousemove", resetTimer);
+    window.addEventListener("keypress", resetTimer);
+
+    resetTimer();
+
+    return () => {
+      clearTimeout(timeout);
+      window.removeEventListener("mousemove", resetTimer);
+      window.removeEventListener("keypress", resetTimer);
+    };
+  }, []);
+
+  // Si session expirée → afficher un message
+  if (sessionExpired) {
+    return (
+      <div className="d-flex flex-column align-items-center justify-content-center min-vh-100 text-center">
+        <h1 className="display-4 text-danger fw-bold">⏳ Session expirée</h1>
+        <p className="lead text-muted mt-3">
+          La page s’est fermée après une longue inactivité.
+          <br /> Recharge la page pour recommencer 💕
+        </p>
+        <button
+          className="btn btn-romantic mt-4"
+          onClick={() => window.location.reload()}
+        >
+          🔄 Recharger
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="d-flex flex-column align-items-center justify-content-center min-vh-100 position-relative text-center">
@@ -167,7 +208,7 @@ export default function App() {
               aria-label={
                 isPlaying ? "Mettre en pause la musique" : "Jouer la musique"
               }
-              className="btn btn-romantic mt-4"
+              className="btn btn-romantic mt-4 me-2"
             >
               {isPlaying ? (
                 <>
@@ -179,6 +220,16 @@ export default function App() {
                 </>
               )}
             </button>
+
+            {/* Bouton Répondre par mail */}
+            <a
+              href="mailto:ton.email@example.com?subject=Ma réponse à ta demande 💍&body=Mon amour, voici ma réponse..."
+              className="btn btn-romantic mt-4"
+              role="button"
+              aria-label="Répondre par mail"
+            >
+              💌 Répondre par mail
+            </a>
           </div>
         </motion.div>
       )}
